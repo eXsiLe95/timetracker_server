@@ -1,0 +1,36 @@
+{
+   "name": "timetracker_server",
+   "version": "0.0.1",
+   "description": "RESTful service for timetracking",
+   "main": "src/server.js",
+   "scripts": {
+      "test": "tsc",
+      "start": "ts-node src/server.ts"
+   },
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/eXsiLe95/timetracker_server.git"
+   },
+   "keywords": [
+      "Node.js",
+      "Express"
+   ],
+   "author": "Lukas Maximilian Kimpel",
+   "license": "MIT",
+   "bugs": {
+      "url": "https://github.com/eXsiLe95/timetracker_server/issues"
+   },
+   "homepage": "https://github.com/eXsiLe95/timetracker_server#readme",
+   "devDependencies": {
+      "@types/express": "^4.17.6",
+      "@types/node": "^8.0.29",
+      "ts-node": "3.3.0",
+      "typescript": "3.3.3333"
+   },
+   "dependencies": {
+      "express": "^4.17.1",
+      "pg": "^7.3.0",
+      "reflect-metadata": "^0.1.10",
+      "typeorm": "0.2.24"
+   }
+}
