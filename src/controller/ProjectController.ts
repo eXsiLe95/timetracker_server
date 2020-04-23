@@ -1,16 +1,16 @@
 import {Request, Response} from "express";
-import {WorkPlaceService} from "../service/WorkPlaceService";
-import {WorkPlace} from "../entity/WorkPlace";
+import {ProjectService} from "../service/ProjectService";
+import {Project} from "../entity/Project";
 import {Connection} from "typeorm";
 
-export class WorkPlaceController {
+export class ProjectController {
 
     static async getAll(request: Request, response: Response) {
 
-        const workPlaces: WorkPlace[] = await WorkPlaceService.getAll();
+        const projects: Project[] = await ProjectService.getAll();
 
-        if (!!workPlaces) {
-            response.status(200).send(workPlaces);
+        if (!!projects) {
+            response.status(200).send(projects);
         } else {
             response.status(500).send({
 
@@ -20,20 +20,20 @@ export class WorkPlaceController {
     }
 
     static async create(request: Request, response: Response) {
-        const workPlaceName: string = request.body.name;
+        const projectName: string = request.body.name;
 
-        if (!workPlaceName) {
+        if (!projectName) {
             response.status(400).send({
 
             });
             return;
         }
 
-        const workPlace: WorkPlace = new WorkPlace();
+        const project: Project = new Project();
 
-        workPlace.name = workPlaceName;
+        project.name = projectName;
 
-        const result: boolean = await WorkPlaceService.create(workPlace);
+        const result: boolean = await ProjectService.create(project);
 
         if (result) {
             response.status(200).send({
@@ -47,19 +47,19 @@ export class WorkPlaceController {
     }
 
     static async get(request: Request, response: Response) {
-        const workPlaceId: number = Number(request.params.workPlaceId);
+        const projectId: number = Number(request.params.projectId);
 
-        if (!workPlaceId) {
+        if (!projectId) {
             response.status(400).send({
 
             });
             return;
         }
 
-        const workPlace: WorkPlace = await WorkPlaceService.get(workPlaceId);
+        const project: Project = await ProjectService.get(projectId);
 
-        if (!!workPlace) {
-            response.status(200).send(workPlace);
+        if (!!project) {
+            response.status(200).send(project);
         } else {
             response.status(500).send({
 
@@ -68,21 +68,21 @@ export class WorkPlaceController {
     }
 
     static async update(request: Request, response: Response) {
-        const workPlaceId: number = Number(request.params.workPlaceId);
-        const workPlaceName: string = request.body.name;
+        const projectId: number = Number(request.params.projectId);
+        const projectName: string = request.body.name;
 
-        if (!workPlaceId && !workPlaceName) {
+        if (!projectId && !projectName) {
             response.status(400).send({
 
             });
             return;
         }
 
-        const workPlace: WorkPlace = new WorkPlace();
-        workPlace.id = workPlaceId;
-        workPlace.name = workPlaceName;
+        const project: Project = new Project();
+        project.id = projectId;
+        project.name = projectName;
 
-        const result: boolean = await WorkPlaceService.update(workPlace);
+        const result: boolean = await ProjectService.update(project);
 
         if (result) {
             response.status(200).send({
@@ -96,16 +96,16 @@ export class WorkPlaceController {
     }
 
     static async delete(request: Request, response, Response) {
-        const workPlaceId: number = Number(request.params.workPlaceId);
+        const projectId: number = Number(request.params.projectId);
 
-        if (!workPlaceId) {
+        if (!projectId) {
             response.status(400).send({
 
             });
             return;
         }
 
-        const result: boolean = await WorkPlaceService.delete(workPlaceId);
+        const result: boolean = await ProjectService.delete(projectId);
 
         if (result) {
             response.status(200).send({
@@ -119,6 +119,6 @@ export class WorkPlaceController {
     }
 
     static async initORM(connection: Connection) {
-        await WorkPlaceService.createConnection(connection);
+        await ProjectService.createConnection(connection);
     }
 }

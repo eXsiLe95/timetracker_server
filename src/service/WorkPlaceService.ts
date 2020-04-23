@@ -1,12 +1,12 @@
-import {Connection, createConnection, Repository} from "typeorm";
+import {Connection, Repository} from "typeorm";
 import {WorkPlace} from "../entity/WorkPlace";
 
 export class WorkPlaceService {
 
     static connection: Connection = null;
 
-    static async createConnection() {
-        WorkPlaceService.connection = await createConnection();
+    static async createConnection(connection: Connection) {
+        WorkPlaceService.connection = connection;
     }
 
     static async getAll() {

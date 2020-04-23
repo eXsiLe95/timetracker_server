@@ -12,7 +12,7 @@ export class Activity {
     @Column()
     start: Date;
 
-    @Column()
+    @Column({nullable: true})
     end: Date;
 
     @ManyToOne(type => Project, project => project.activities, {nullable: true})
