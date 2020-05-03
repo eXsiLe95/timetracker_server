@@ -9,37 +9,46 @@ export class ProjectService {
         ProjectService.connection = connection;
     }
 
-    static async getAll() {
+    static async getAll(): Promise<Project[]> {
         const projectRepository: Repository<Project> = ProjectService.connection.getRepository(Project);
 
-        return await projectRepository.find();
+        return await projectRepository.find({
+            relations: ["activities", "users", "workPlace"]
+        });
     }
 
-    static async create(project: Project): Promise<boolean> {
-        const projectRepository: Repository<Project> = ProjectService.connection.getRepository(Project);
-        const databaseProject: Project = await projectRepository.save<Project>(project);
-
-        return !!databaseProject;
-    }
-
-    static async get(projectId: number) {
+    static async getMany(projectIds: number[]): Promise<Project[]> {
         const projectRepository: Repository<Project> = ProjectService.connection.getRepository(Project);
 
-        return await projectRepository.findOne(projectId);
+        return await projectRepository.findByIds(projectIds, {
+            relations: ["activities", "users", "workPlace"]
+        });
     }
 
-    static async update(project: Project) {
+    static async create(project: Project): Promise<Project> {
         const projectRepository: Repository<Project> = ProjectService.connection.getRepository(Project);
-        const databaseProject: Project = await projectRepository.save<Project>(project);
 
-        return !!databaseProject;
+        return await projectRepository.save<Project>(project);
     }
 
-    static async delete(projectId: number) {
+    static async get(projectId: number): Promise<Project> {
+        const projectRepository: Repository<Project> = ProjectService.connection.getRepository(Project);
+
+        return await projectRepository.findOne(projectId, {
+            relations: ["activities", "users", "workPlace"]
+        });
+    }
+
+    static async update(project: Project): Promise<Project> {
+        const projectRepository: Repository<Project> = ProjectService.connection.getRepository(Project);
+
+        return await projectRepository.save<Project>(project);
+    }
+
+    static async delete(projectId: number): Promise<Project> {
         const projectRepository: Repository<Project> = ProjectService.connection.getRepository(Project);
         const project: Project = await projectRepository.findOne(projectId);
-        const databaseProject: Project = await projectRepository.remove(project);
 
-        return !!databaseProject;
+        return await projectRepository.remove(project);
     }
 }

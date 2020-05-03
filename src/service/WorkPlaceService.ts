@@ -9,37 +9,42 @@ export class WorkPlaceService {
         WorkPlaceService.connection = connection;
     }
 
-    static async getAll() {
+    static async getAll(): Promise<WorkPlace[]> {
         const workPlaceRepository: Repository<WorkPlace> = WorkPlaceService.connection.getRepository(WorkPlace);
 
-        return await workPlaceRepository.find();
+        return await workPlaceRepository.find({
+            relations: ["projects", "users"],
+        });
     }
 
-    static async create(workPlace: WorkPlace): Promise<boolean> {
+    static async getMany(projectWorkPlaceIds: number[]): Promise<WorkPlace[]> {
+        return [];
+    }
+
+    static async create(workPlace: WorkPlace): Promise<WorkPlace> {
         const workPlaceRepository: Repository<WorkPlace> = WorkPlaceService.connection.getRepository(WorkPlace);
-        const databaseWorkPlace: WorkPlace = await workPlaceRepository.save<WorkPlace>(workPlace);
 
-        return !!databaseWorkPlace;
+        return await workPlaceRepository.save<WorkPlace>(workPlace);
     }
 
-    static async get(workPlaceId: number) {
+    static async get(workPlaceId: number): Promise<WorkPlace> {
         const workPlaceRepository: Repository<WorkPlace> = WorkPlaceService.connection.getRepository(WorkPlace);
 
-        return await workPlaceRepository.findOne(workPlaceId);
+        return await workPlaceRepository.findOne(workPlaceId, {
+            relations: ["projects", "users"],
+        });
     }
 
-    static async update(workPlace: WorkPlace) {
+    static async update(workPlace: WorkPlace): Promise<WorkPlace> {
         const workPlaceRepository: Repository<WorkPlace> = WorkPlaceService.connection.getRepository(WorkPlace);
-        const databaseWorkPlace: WorkPlace = await workPlaceRepository.save<WorkPlace>(workPlace);
 
-        return !!databaseWorkPlace;
+        return await workPlaceRepository.save<WorkPlace>(workPlace);
     }
 
-    static async delete(workPlaceId: number) {
+    static async delete(workPlaceId: number): Promise<WorkPlace> {
         const workPlaceRepository: Repository<WorkPlace> = WorkPlaceService.connection.getRepository(WorkPlace);
         const workPlace: WorkPlace = await workPlaceRepository.findOne(workPlaceId);
-        const databaseWorkPlace: WorkPlace = await workPlaceRepository.remove(workPlace);
 
-        return !!databaseWorkPlace;
+        return await workPlaceRepository.remove(workPlace);
     }
 }

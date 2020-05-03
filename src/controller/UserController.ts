@@ -37,12 +37,10 @@ export class UserController {
         user.lastName = lastName;
         user.mail = mail;
 
-        const result: boolean = await UserService.create(user);
+        const result: User = await UserService.create(user);
 
         if (result) {
-            response.status(200).send({
-
-            });
+            response.status(200).send(result);
         } else {
             response.status(500).send({
 
@@ -99,12 +97,10 @@ export class UserController {
             user.mail = userMail;
         }
 
-        const result: boolean = await UserService.update(user);
+        const result: User = await UserService.update(user);
 
         if (result) {
-            response.status(200).send({
-
-            });
+            response.status(200).send(result);
         } else {
             response.status(500).send({
 
@@ -122,12 +118,10 @@ export class UserController {
             return;
         }
 
-        const result: boolean = await UserService.delete(userId);
+        const result: User = await UserService.delete(userId);
 
         if (result) {
-            response.status(200).send({
-
-            });
+            response.status(200).send(result);
         } else {
             response.status(500).send({
 

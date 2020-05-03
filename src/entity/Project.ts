@@ -12,12 +12,12 @@ export class Project {
     @Column()
     name: string;
 
+    @OneToMany(type => Activity, activity => activity.project)
+    activities: Activity[];
+
     @ManyToMany(type => User, user => user.projects)
     users: User[];
 
     @ManyToOne(type => WorkPlace, workPlace => workPlace.projects)
     workPlace: WorkPlace;
-
-    @OneToMany(type => Activity, activity => activity.project)
-    activities: Activity[];
 }

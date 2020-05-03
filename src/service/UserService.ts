@@ -9,37 +9,49 @@ export class UserService {
         UserService.connection = connection;
     }
 
-    static async getAll() {
+    static async getAll(): Promise<User[]> {
         const userRepository: Repository<User> = UserService.connection.getRepository(User);
 
-        return await userRepository.find();
+        return await userRepository.find({
+            relations: ["activities", "projects", "workPlaces"]
+        });
     }
 
-    static async create(user: User): Promise<boolean> {
+    static async getMany(userIds: number[]): Promise<User[]> {
+        if (!userIds) {
+            return [];
+        }
+
         const userRepository: Repository<User> = UserService.connection.getRepository(User);
-        const databaseUser: User = await userRepository.save<User>(user);
+        const users: User[] = await userRepository.findByIds(userIds, {
+            relations: ["projects", "workPlaces"]
+        });
 
-        return !!databaseUser;
+        return users ? users : [];
     }
 
-    static async get(userId: number) {
+    static async create(user: User): Promise<User> {
+        const userRepository: Repository<User> = UserService.connection.getRepository(User);
+
+        return await userRepository.save<User>(user);
+    }
+
+    static async get(userId: number): Promise<User> {
         const userRepository: Repository<User> = UserService.connection.getRepository(User);
 
         return await userRepository.findOne(userId);
     }
 
-    static async update(user: User) {
+    static async update(user: User): Promise<User> {
         const userRepository: Repository<User> = UserService.connection.getRepository(User);
-        const databaseUser: User = await userRepository.save<User>(user);
 
-        return !!databaseUser;
+        return await userRepository.save<User>(user);
     }
 
-    static async delete(userId: number) {
+    static async delete(userId: number): Promise<User> {
         const userRepository: Repository<User> = UserService.connection.getRepository(User);
         const user: User = await userRepository.findOne(userId);
-        const databaseUser: User = await userRepository.remove(user);
 
-        return !!databaseUser;
+        return await userRepository.remove(user);
     }
 }

@@ -1,7 +1,6 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany} from "typeorm";
 import {User} from "./User";
 import {Project} from "./Project";
-import {Activity} from "./Activity";
 
 @Entity()
 export class WorkPlace {
@@ -14,9 +13,6 @@ export class WorkPlace {
 
     @OneToMany(type => Project, project => project.workPlace)
     projects: Project[];
-
-    @OneToMany(type => Activity, activity => activity.workPlace)
-    activities: Activity[];
 
     @ManyToMany(type => User, user => user.workPlaces)
     users: User[];

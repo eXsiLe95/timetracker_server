@@ -1,6 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, ManyToOne} from "typeorm";
-import {User} from "./User";
-import {WorkPlace} from "./WorkPlace";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne} from "typeorm";
 import {Project} from "./Project";
 
 @Entity()
@@ -17,7 +15,4 @@ export class Activity {
 
     @ManyToOne(type => Project, project => project.activities, {nullable: true})
     project: Project;
-
-    @ManyToOne(type => WorkPlace, workPlace => workPlace.activities, {nullable: true})
-    workPlace: WorkPlace;
 }

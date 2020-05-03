@@ -1,7 +1,7 @@
 import express = require("express");
 import {WorkPlaceController} from "./controller/WorkPlaceController";
 import {ProjectController} from "./controller/ProjectController";
-import {Connection, createConnection} from "typeorm";
+import {Connection, createConnection} from 'typeorm';
 import {UserController} from "./controller/UserController";
 
 const {
