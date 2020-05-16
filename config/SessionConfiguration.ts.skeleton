@@ -1,0 +1,13 @@
+import {SessionOptions} from 'express-session';
+
+export class SessionConfiguration {
+
+    private static SECRET = process.env.SECRET;
+
+    public static sessionOptions: SessionOptions = {
+        resave: true,
+        saveUninitialized: true,
+        rolling: true,
+        secret: SessionConfiguration.SECRET,
+    }
+}
