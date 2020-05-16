@@ -42,6 +42,16 @@ export class UserService {
         return await userRepository.findOne(userId);
     }
 
+    static async search(user: User) {
+        const userRepository: Repository<User> = UserService.connection.getRepository(User);
+
+        return await userRepository.findOne({
+            firstName: user.firstName,
+            lastName: user.lastName,
+            mail: user.mail,
+        });
+    }
+
     static async update(user: User): Promise<User> {
         const userRepository: Repository<User> = UserService.connection.getRepository(User);
 

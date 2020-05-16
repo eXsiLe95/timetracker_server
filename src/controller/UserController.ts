@@ -49,14 +49,7 @@ export class UserController {
     }
 
     static async get(request: Request, response: Response) {
-        const userId: number = Number(request.params.userId);
-
-        if (!userId) {
-            response.status(400).send({
-
-            });
-            return;
-        }
+        const userId: number = Number(request.user['id']);
 
         const user: User = await UserService.get(userId);
 

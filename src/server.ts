@@ -1,16 +1,37 @@
-import express = require("express");
-import {WorkPlaceController} from "./controller/WorkPlaceController";
-import {ProjectController} from "./controller/ProjectController";
+import express = require('express');
+import {WorkPlaceController} from './controller/WorkPlaceController';
+import {ProjectController} from './controller/ProjectController';
 import {Connection, createConnection} from 'typeorm';
-import {UserController} from "./controller/UserController";
+import {UserController} from './controller/UserController';
+import * as session from 'express-session';
+import * as passport from 'passport';
+import {Profile} from 'passport';
+import {AuthenticationController} from './controller/AuthenticationController';
+import {GoogleConfiguration} from '../config/GoogleConfiguration';
+import {SessionConfiguration} from '../config/SessionConfiguration';
 
 const {
-    PORT = 8080
+    PORT = 8080,
 } = process.env;
 
 const app = express();
 
 app.use(express.json());
+
+app.use(session(SessionConfiguration.sessionOptions));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(GoogleConfiguration.googleStrategy);
+
+passport.serializeUser((profile: Profile, done: Function) => {
+    done(null, profile);
+});
+
+passport.deserializeUser((profile: Profile, done: Function) => {
+    done(null, profile);
+});
 
 app.use('/', express.static(__dirname + '/frontend'))
 
@@ -24,28 +45,38 @@ app.listen(PORT, async () => {
     console.info('Server started on http://localhost:' + PORT);
 });
 
-// Workplace routes
-app.get('/api/workplaces', WorkPlaceController.getAll);
+// Authentication routes
+// TODO Remove
+app.get('/api/auth/me', AuthenticationController.isLoggedIn, AuthenticationController.me);
+app.get('/api/auth/google/success', AuthenticationController.isLoggedIn, AuthenticationController.loggedIn);
+app.get('/api/auth/logout', AuthenticationController.logout);
+app.get('/api/auth/google', passport.authenticate(GoogleConfiguration.AUTHENTICATION_STRATEGY_GOOGLE,
+    GoogleConfiguration.googleStrategyAuthenticationOptions));
+app.get('/api/auth/google/callback', passport.authenticate(GoogleConfiguration.AUTHENTICATION_STRATEGY_GOOGLE,
+    GoogleConfiguration.googleStrategyAuthenticationRedirection));
 
-app.post('/api/workplace', WorkPlaceController.create);
-app.get('/api/workplace/:workPlaceId', WorkPlaceController.get)
-app.put('/api/workplace/:workPlaceId', WorkPlaceController.update);
-app.delete('/api/workplace/:workPlaceId', WorkPlaceController.delete);
+// Workplace routes
+app.get('/api/workplaces', AuthenticationController.isLoggedIn, WorkPlaceController.getAll);
+
+app.post('/api/workplace', AuthenticationController.isLoggedIn, WorkPlaceController.create);
+app.get('/api/workplace/:workPlaceId', AuthenticationController.isLoggedIn, WorkPlaceController.get)
+app.put('/api/workplace/:workPlaceId', AuthenticationController.isLoggedIn, WorkPlaceController.update);
+app.delete('/api/workplace/:workPlaceId', AuthenticationController.isLoggedIn, WorkPlaceController.delete);
 
 // Project routes
-app.get('/api/projects', ProjectController.getAll);
+app.get('/api/projects', AuthenticationController.isLoggedIn, ProjectController.getAll);
 
-app.post('/api/project', ProjectController.create);
-app.get('/api/project/:projectId', ProjectController.get)
-app.put('/api/project/:projectId', ProjectController.update);
-app.delete('/api/project/:projectId', ProjectController.delete);
+app.post('/api/project', AuthenticationController.isLoggedIn, ProjectController.create);
+app.get('/api/project/:projectId', AuthenticationController.isLoggedIn, ProjectController.get)
+app.put('/api/project/:projectId', AuthenticationController.isLoggedIn, ProjectController.update);
+app.delete('/api/project/:projectId', AuthenticationController.isLoggedIn, ProjectController.delete);
 
 // User routes
-app.get('/api/users', UserController.getAll);
+app.get('/api/users', AuthenticationController.isLoggedIn, UserController.getAll);
 
-app.post('/api/user', UserController.create);
-app.get('/api/user/:userId', UserController.get)
-app.put('/api/user/:userId', UserController.update);
-app.delete('/api/user/:userId', UserController.delete);
+app.post('/api/user', AuthenticationController.isLoggedIn, UserController.create);
+app.get('/api/user/:userId', AuthenticationController.isLoggedIn, UserController.get)
+app.put('/api/user/:userId', AuthenticationController.isLoggedIn, UserController.update);
+app.delete('/api/user/:userId', AuthenticationController.isLoggedIn, UserController.delete);
 
 // Time tracking routes

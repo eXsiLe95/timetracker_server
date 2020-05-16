@@ -27,8 +27,7 @@ export class WorkPlaceController {
         const workPlaceName: string = request.body.name;
         const workPlaceProjectIds: number[] = request.body.projectIds;
         const workPlaceUserIds: number[] = request.body.userIds;
-        // TODO: Get user id from authentication
-        const userId: number = Number(request.body.userId);
+        const userId: number = Number(request.user['id']);
 
         if (!workPlaceName || !userId) {
             response.status(400).send({
@@ -38,13 +37,11 @@ export class WorkPlaceController {
         }
 
         const workPlace: WorkPlace = new WorkPlace();
-        // TODO: Get user id from authentication
         const user: User = await UserService.get(userId);
 
         workPlace.name = workPlaceName;
         workPlace.projects = await ProjectService.getMany(workPlaceProjectIds);
         workPlace.users = await UserService.getMany(workPlaceUserIds);
-        // TODO: Get user id from authentication
         workPlace.users = [user];
 
         const result: WorkPlace = await WorkPlaceService.create(workPlace);
